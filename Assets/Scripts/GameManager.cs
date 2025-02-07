@@ -160,6 +160,11 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene(1);
         }
+
+        public override void Exit()
+        {
+            print($"Exited {this.Name} STATE...");
+        }
     }
 
     class GameOverGameState : GameState
