@@ -16,8 +16,14 @@ public class PlayerController : MonoBehaviour
     {
         if(GameManager.Instance != null && GameManager.Instance.GameOver) return;
 
-        float horizontal = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+        // ABSTRACTION
+        MovePlayer();
+    }
 
+    // ABSTRACTION
+    void MovePlayer()
+    {
+        float horizontal = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
         transform.Translate(horizontal, 0, 0);
     }
 
