@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,8 +10,10 @@ public class GameManager : MonoBehaviour
     // ENCAPSULATION
     public static GameManager Instance { get; private set; }
 
+    GameObject playerNameInput;
     IGameState currentGameState;
     IGameState defaultGameState;
+    private PlayerInfo playerInfo;
 
     private void Awake()
     {
@@ -18,8 +21,9 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
             defaultGameState = new MenuGameState(); // default start state
-            ShowMenu(); 
+            ShowMenu();
         }
         else
         {
@@ -28,12 +32,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Update() {
+    private void Update()
+    {
         currentGameState.StateUpdate();
+    }
+
+    private string GetPlayerNameFromInput()
+    {
+        playerNameInput = GameObject.Find("PlayerNameInput");
+        return playerNameInput.GetComponent<TMP_InputField>().text.ToString();
     }
 
     public void StartGame()
     {
+        ResetPlayerInfo();
         SwitchGameState(new PlayingGameState());
     }
 
@@ -50,6 +62,31 @@ public class GameManager : MonoBehaviour
         currentGameState.Enter();
     }
 
+    public int GetPlayerScore()
+    {
+        return playerInfo.Score;
+    }
+
+    public string GetPlayerName()
+    {
+        return playerInfo.Name;
+    }
+
+    public void ResetPlayerInfo()
+    {
+        string playerName = GetPlayerNameFromInput();
+        playerInfo = new PlayerInfo
+        {
+            Score = 0,
+            Name = playerName,
+        };
+    }
+
+    struct PlayerInfo
+    {
+        public string Name;
+        public int Score;
+    }
 
     // state classes
     // POLYMORPHISM
@@ -77,7 +114,7 @@ public class GameManager : MonoBehaviour
     class PlayingGameState : IGameState
     {
         public void Enter()
-        {    
+        {
             SceneManager.LoadScene(1);
         }
 

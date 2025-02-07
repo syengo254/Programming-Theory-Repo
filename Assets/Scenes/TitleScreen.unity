@@ -655,7 +655,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -742,6 +742,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 333f83d53c7eb7f45b03fa6e56928823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerNameInput: {fileID: 217253299}
 --- !u!1 &267588342
 GameObject:
   m_ObjectHideFlags: 0
