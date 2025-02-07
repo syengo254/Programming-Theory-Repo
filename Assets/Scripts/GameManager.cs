@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     IGameState defaultGameState;
     private PlayerInfo playerInfo;
 
+    public bool GameOver {get; private set;}
+
     private void Awake()
     {
         if (Instance == null)
