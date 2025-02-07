@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
         SwitchGameState(new PlayingGameState());
     }
 
+    //ABSTRACTION
     public void ShowMenu()
     {
         SwitchGameState(defaultGameState);
