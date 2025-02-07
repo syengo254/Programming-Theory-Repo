@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
         set{
             if(value == null)
             {
-
+                Debug.LogError("Game state cannot be set to null!");
             }
             else
             {
