@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,8 +12,27 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     GameObject playerNameInput;
-    IGameState currentGameState;
-    IGameState defaultGameState;
+    private GameState gameState;
+    GameState defaultGameState;
+
+    // ENCAPSULATION
+    public GameState CurrentGameState
+    {
+        get
+        {
+            return gameState;
+        }
+        set{
+            if(value == null)
+            {
+
+            }
+            else
+            {
+                gameState = value;
+            }
+        }
+    }
     private PlayerInfo playerInfo;
 
     public bool GameOver { get; private set; }
@@ -36,7 +56,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        currentGameState.StateUpdate();
+        CurrentGameState.StateUpdate();
     }
 
     private string GetPlayerNameFromInput()
@@ -67,11 +87,11 @@ public class GameManager : MonoBehaviour
         SwitchGameState(new GameOverGameState());
     }
 
-    private void SwitchGameState(IGameState newState)
+    private void SwitchGameState(GameState newState)
     {
-        currentGameState?.Exit();
-        currentGameState = newState;
-        currentGameState.Enter();
+        CurrentGameState?.Exit();
+        CurrentGameState = newState;
+        CurrentGameState.Enter();
     }
 
     public int GetPlayerScore()
@@ -106,10 +126,16 @@ public class GameManager : MonoBehaviour
     }
 
     // state classes
-    // POLYMORPHISM
-    class MenuGameState : IGameState
+    // INHERITANCE
+    class MenuGameState : GameState
     {
-        public void Enter()
+        public MenuGameState()
+        {
+            Name = "MENU";
+        }
+
+        // POLYMORPHISM
+        public override void Enter()
         {
             if (SceneManager.GetActiveScene().buildIndex != 0)
             {
@@ -117,50 +143,41 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        public void StateUpdate()
+        public override void Exit()
         {
-            // TODO
-        }
-
-        public void Exit()
-        {
-            // TODO: state cleanups
+            print($"Exited {this.Name} STATE...");
         }
     }
 
-    class PlayingGameState : IGameState
+    class PlayingGameState : GameState
     {
-        public void Enter()
+        public PlayingGameState()
+        {
+            Name = "PLAYING";
+        }
+
+        public override void Enter()
         {
             SceneManager.LoadScene(1);
         }
-
-        public void StateUpdate()
-        {
-            // TODO
-        }
-
-        public void Exit()
-        {
-            // TODO: state cleanups
-        }
     }
 
-    class GameOverGameState : IGameState
+    class GameOverGameState : GameState
     {
-        public void Enter()
+        public GameOverGameState()
+        {
+            Name = "GAMEOVER";
+        }
+
+        public override void Enter()
         {
             print("Game over!");
         }
 
-        public void StateUpdate()
-        {
-            // TODO
-        }
-
-        public void Exit()
+        public override void Exit()
         {
             GameManager.Instance.GameOver = false;
+            print($"Exited {this.Name} STATE...");
         }
     }
 }
