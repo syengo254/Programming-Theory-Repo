@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
         playerInfo = new PlayerInfo
         {
             Score = 0,
-            Name = playerName,
+            Name = playerName.Length > 0 ? playerName : "Guest",
         };
     }
 
