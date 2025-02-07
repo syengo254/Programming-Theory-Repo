@@ -10,6 +10,7 @@ public class MainManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI finalScoreText;
     public GameObject gameOverCanvas;
+    bool gameEnded = false;
     
     void Start()
     {
@@ -23,12 +24,15 @@ public class MainManager : MonoBehaviour
     
     void FixedUpdate()
     {
+        if(gameEnded) return;
+        
         scoreText.text = $"Score: {GameManager.Instance?.GetPlayerScore()}";
 
-        if(GameManager.Instance.GameOver)
+        if(GameManager.Instance && GameManager.Instance.GameOver)
         {
             gameOverCanvas.SetActive(true);
             finalScoreText.SetText($"Score: {GameManager.Instance.GetPlayerScore()}");
+            gameEnded = true;
         }
     }
 }

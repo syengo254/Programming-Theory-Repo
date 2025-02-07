@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,11 +12,30 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     GameObject playerNameInput;
-    IGameState currentGameState;
-    IGameState defaultGameState;
+    private GameState gameState;
+    GameState defaultGameState;
+
+    // ENCAPSULATION
+    public GameState CurrentGameState
+    {
+        get
+        {
+            return gameState;
+        }
+        set{
+            if(value == null)
+            {
+
+            }
+            else
+            {
+                gameState = value;
+            }
+        }
+    }
     private PlayerInfo playerInfo;
 
-    public bool GameOver {get; private set;}
+    public bool GameOver { get; private set; }
 
     private void Awake()
     {
@@ -36,12 +56,16 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        currentGameState.StateUpdate();
+        CurrentGameState.StateUpdate();
     }
 
     private string GetPlayerNameFromInput()
     {
         playerNameInput = GameObject.Find("PlayerNameInput");
+        if(playerNameInput == null)
+        {
+            return playerInfo == null ? "Guest" : playerInfo.Name;
+        }
         return playerNameInput.GetComponent<TMP_InputField>().text.ToString();
     }
 
@@ -57,11 +81,17 @@ public class GameManager : MonoBehaviour
         SwitchGameState(defaultGameState);
     }
 
-    private void SwitchGameState(IGameState newState)
+    public void SetGameOver()
     {
-        currentGameState?.Exit();
-        currentGameState = newState;
-        currentGameState.Enter();
+        GameOver = true;
+        SwitchGameState(new GameOverGameState());
+    }
+
+    private void SwitchGameState(GameState newState)
+    {
+        CurrentGameState?.Exit();
+        CurrentGameState = newState;
+        CurrentGameState.Enter();
     }
 
     public int GetPlayerScore()
@@ -84,17 +114,28 @@ public class GameManager : MonoBehaviour
         };
     }
 
-    struct PlayerInfo
+    public void AddPlayerScore()
+    {
+        playerInfo.Score += 100;
+    }
+
+    class PlayerInfo
     {
         public string Name;
         public int Score;
     }
 
     // state classes
-    // POLYMORPHISM
-    class MenuGameState : IGameState
+    // INHERITANCE
+    class MenuGameState : GameState
     {
-        public void Enter()
+        public MenuGameState()
+        {
+            Name = "MENU";
+        }
+
+        // POLYMORPHISM
+        public override void Enter()
         {
             if (SceneManager.GetActiveScene().buildIndex != 0)
             {
@@ -102,32 +143,46 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        public void StateUpdate()
+        public override void Exit()
         {
-            // TODO
-        }
-
-        public void Exit()
-        {
-            // TODO: state cleanups
+            print($"Exited {this.Name} STATE...");
         }
     }
 
-    class PlayingGameState : IGameState
+    class PlayingGameState : GameState
     {
-        public void Enter()
+        public PlayingGameState()
+        {
+            Name = "PLAYING";
+        }
+
+        public override void Enter()
         {
             SceneManager.LoadScene(1);
         }
 
-        public void StateUpdate()
+        public override void Exit()
         {
-            // TODO
+            print($"Exited {this.Name} STATE...");
+        }
+    }
+
+    class GameOverGameState : GameState
+    {
+        public GameOverGameState()
+        {
+            Name = "GAMEOVER";
         }
 
-        public void Exit()
+        public override void Enter()
         {
-            // TODO: state cleanups
+            print("Game over!");
+        }
+
+        public override void Exit()
+        {
+            GameManager.Instance.GameOver = false;
+            print($"Exited {this.Name} STATE...");
         }
     }
 }

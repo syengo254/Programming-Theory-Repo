@@ -12,6 +12,6 @@ public class MainGameUIHandler : MonoBehaviour
 
     public void HandleRestartGameButton()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameManager.Instance?.StartGame();
     } 
 }
