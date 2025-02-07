@@ -4,15 +4,32 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] List<GameObject> obstaclePrefabs = new List<GameObject>();
+    float spawnInterval = 4.0f;
+
+    float startZpos = 10.0f;
+    
     void Start()
+    {
+        InvokeRepeating("SpawnRandomObstacle", 0.5f, spawnInterval);
+    }
+
+    void SpawnRandomObstacle()
+    {
+        if(GameManager.Instance != null && GameManager.Instance.GameOver) return;
+
+        int randomIndex = Random.Range(0, obstaclePrefabs.Count);
+        GameObject prefab = obstaclePrefabs[randomIndex];
+
+        Instantiate(prefab, new Vector3(prefab.transform.position.x, prefab.transform.position.y, startZpos), prefab.transform.rotation);
+    }
+    
+    void Update()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private void OnDestroy() {
+        CancelInvoke();
     }
 }

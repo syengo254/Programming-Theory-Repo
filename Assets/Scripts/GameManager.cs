@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     IGameState defaultGameState;
     private PlayerInfo playerInfo;
 
-    public bool GameOver {get; private set;}
+    public bool GameOver { get; private set; }
 
     private void Awake()
     {
@@ -42,6 +42,10 @@ public class GameManager : MonoBehaviour
     private string GetPlayerNameFromInput()
     {
         playerNameInput = GameObject.Find("PlayerNameInput");
+        if(playerNameInput == null)
+        {
+            return playerInfo == null ? "Guest" : playerInfo.Name;
+        }
         return playerNameInput.GetComponent<TMP_InputField>().text.ToString();
     }
 
@@ -55,6 +59,12 @@ public class GameManager : MonoBehaviour
     public void ShowMenu()
     {
         SwitchGameState(defaultGameState);
+    }
+
+    public void SetGameOver()
+    {
+        GameOver = true;
+        SwitchGameState(new GameOverGameState());
     }
 
     private void SwitchGameState(IGameState newState)
@@ -84,7 +94,12 @@ public class GameManager : MonoBehaviour
         };
     }
 
-    struct PlayerInfo
+    public void AddPlayerScore()
+    {
+        playerInfo.Score += 100;
+    }
+
+    class PlayerInfo
     {
         public string Name;
         public int Score;
@@ -128,6 +143,24 @@ public class GameManager : MonoBehaviour
         public void Exit()
         {
             // TODO: state cleanups
+        }
+    }
+
+    class GameOverGameState : IGameState
+    {
+        public void Enter()
+        {
+            print("Game over!");
+        }
+
+        public void StateUpdate()
+        {
+            // TODO
+        }
+
+        public void Exit()
+        {
+            GameManager.Instance.GameOver = false;
         }
     }
 }
