@@ -35,4 +35,14 @@ public class MainManager : MonoBehaviour
             gameEnded = true;
         }
     }
+
+    public void HandleMenuButton()
+    {
+        GameManager.Instance?.ShowMenu();
+    }
+
+    public void HandleRestartGameButton()
+    {
+        GameManager.Instance?.StartGame();
+    } 
 }
