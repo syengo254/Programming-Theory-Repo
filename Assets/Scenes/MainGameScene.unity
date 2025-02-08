@@ -171,6 +171,8 @@ MonoBehaviour:
   - {fileID: 2245716249233359762, guid: 741ad29490e5b474dbef94f72b32a502, type: 3}
   - {fileID: 1403969542210813333, guid: ca7db78846fc1cf4094156c36f7f8c67, type: 3}
   - {fileID: 7777357707975522457, guid: d6d38bf6bc8c1c44b9a83915074717f0, type: 3}
+  - {fileID: 7777357707975522457, guid: 73bd6811b2fcf594daa6420c9542c3af, type: 3}
+  - {fileID: 3491528893288376800, guid: 860b97d8862e5ea42929c1d6a84de684, type: 3}
 --- !u!1 &59627913
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,8 +658,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainGameUIHandler, Assembly-CSharp
+      - m_Target: {fileID: 1898607108}
+        m_TargetAssemblyTypeName: MainManager, Assembly-CSharp
         m_MethodName: HandleMenuButton
         m_Mode: 1
         m_Arguments:
@@ -724,7 +726,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &386542554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1631,8 +1633,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainGameUIHandler, Assembly-CSharp
+      - m_Target: {fileID: 1898607108}
+        m_TargetAssemblyTypeName: MainManager, Assembly-CSharp
         m_MethodName: HandleRestartGameButton
         m_Mode: 1
         m_Arguments:
@@ -1966,8 +1968,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainGameUIHandler, Assembly-CSharp
+      - m_Target: {fileID: 1898607108}
+        m_TargetAssemblyTypeName: MainManager, Assembly-CSharp
         m_MethodName: HandleMenuButton
         m_Mode: 1
         m_Arguments:
@@ -2351,7 +2353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.02260591, g: 0.02450641, b: 0.05660379, a: 1}
+  m_Color: {r: 0.026482286, g: 0.026482286, b: 0.08176088, a: 0.93333334}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

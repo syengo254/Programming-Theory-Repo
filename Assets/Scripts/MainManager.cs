@@ -9,40 +9,65 @@ public class MainManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI finalScoreText;
+
+    public static MainManager Current { get; private set; }
+    private int difficulty = 1;
+    public int Difficulty
+    {
+        get
+        {
+            return difficulty;
+        }
+    }
+    
     public GameObject gameOverCanvas;
     bool gameEnded = false;
-    
+    GameManager gameManager;
+
+    private void Awake()
+    {
+        if (Current == null)
+        {
+            Current = this;
+        }
+    }
+
     void Start()
     {
-        nameText.text = $"Name: {GameManager.Instance?.GetPlayerName()}";
+        gameManager = GameManager.Instance;
+        if (gameManager)
+        {
+            nameText.text = $"Name: {gameManager.GetPlayerName()}";
+        }
     }
 
-    void Update() {
-        
+    void Update()
+    {
+
     }
 
-    
+
     void FixedUpdate()
     {
-        if(gameEnded) return;
-        
-        scoreText.text = $"Score: {GameManager.Instance?.GetPlayerScore()}";
+        if (gameEnded) return;
 
-        if(GameManager.Instance && GameManager.Instance.GameOver)
+        scoreText.text = $"Score: {gameManager.GetPlayerScore()}";
+
+        if (gameManager && gameManager.GameOver)
         {
             gameOverCanvas.SetActive(true);
-            finalScoreText.SetText($"Score: {GameManager.Instance.GetPlayerScore()}");
+            finalScoreText.SetText($"Score: {gameManager.GetPlayerScore()}");
             gameEnded = true;
         }
     }
 
     public void HandleMenuButton()
     {
-        GameManager.Instance?.ShowMenu();
+        gameManager.ShowMenu();
     }
 
     public void HandleRestartGameButton()
     {
-        GameManager.Instance?.StartGame();
-    } 
+        gameManager.StartGame();
+    }
 }

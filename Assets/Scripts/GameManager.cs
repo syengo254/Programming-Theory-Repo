@@ -114,9 +114,9 @@ public class GameManager : MonoBehaviour
         };
     }
 
-    public void AddPlayerScore()
+    public void AddPlayerScore(int points)
     {
-        playerInfo.Score += 100;
+        playerInfo.Score += points;
     }
 
     class PlayerInfo
