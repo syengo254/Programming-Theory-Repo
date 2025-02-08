@@ -5,31 +5,65 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] List<GameObject> obstaclePrefabs = new List<GameObject>();
-    float spawnInterval = 4.0f;
 
-    float startZpos = 10.0f;
-    
+    float spawnInterval = 5.0f;
+    float startZpos = 15.0f;
+    float nextSpawn = 0;
+    int oldDifficulty;
+
     void Start()
     {
-        InvokeRepeating("SpawnRandomObstacle", 0.5f, spawnInterval);
+        oldDifficulty = MainManager.Current.Difficulty;
+        Invoke("StartSpawning", 0.5f);
+    }
+
+    private void Update()
+    {
+        if (MainManager.Current.Difficulty != oldDifficulty && !GameManager.Instance.GameOver)
+        {
+            // difficulty has just changed
+            oldDifficulty = MainManager.Current.Difficulty;
+            StopAllCoroutines();
+            StartSpawning();
+        }
+
+        if (GameManager.Instance.GameOver)
+        {
+            StopAllCoroutines();
+            Destroy(gameObject);
+            return;
+        }
+    }
+
+    void StartSpawning()
+    {
+        StartCoroutine(UpdateTickAndSpawn());
     }
 
     void SpawnRandomObstacle()
     {
-        if(GameManager.Instance != null && GameManager.Instance.GameOver) return;
-
         int randomIndex = Random.Range(0, obstaclePrefabs.Count);
         GameObject prefab = obstaclePrefabs[randomIndex];
 
         Instantiate(prefab, new Vector3(prefab.transform.position.x, prefab.transform.position.y, startZpos), prefab.transform.rotation);
-    }
-    
-    void Update()
-    {
-        
+
+        if (startZpos < 45)
+        {
+            startZpos += 15f;
+        }
     }
 
-    private void OnDestroy() {
-        CancelInvoke();
+    IEnumerator UpdateTickAndSpawn()
+    {
+        yield return new WaitForSeconds(nextSpawn);
+
+        SpawnRandomObstacle();
+        nextSpawn = spawnInterval / MainManager.Current.Difficulty;
+        StartCoroutine(UpdateTickAndSpawn());
+    }
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
     }
 }

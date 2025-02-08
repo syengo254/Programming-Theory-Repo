@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1425526224725611021}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.16, y: 0, z: 0}
   m_LocalScale: {x: 3.1521, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -159,7 +159,7 @@ Transform:
   m_GameObject: {fileID: 3491528893288376800}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.844, y: 0.6, z: 0}
+  m_LocalPosition: {x: 2.8, y: 0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -179,7 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff4ffa3ce5c0f044a59240c67bd47c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  obstacleType: {fileID: 11400000, guid: 44b5bdfb63492624289267c1b374a6b3, type: 2}
 --- !u!1 &8385506431248564905
 GameObject:
   m_ObjectHideFlags: 0

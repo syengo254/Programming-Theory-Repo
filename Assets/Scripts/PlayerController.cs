@@ -14,10 +14,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if(GameManager.Instance != null && GameManager.Instance.GameOver) return;
-
-        // ABSTRACTION
-        MovePlayer();
+        if (GameManager.Instance && !GameManager.Instance.GameOver)
+        {
+            MovePlayer();
+        }
     }
 
     // ABSTRACTION
@@ -29,11 +29,14 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if(GameManager.Instance != null && GameManager.Instance.GameOver) return;
-
         if (other.gameObject.CompareTag("Obstacle"))
-        {   
-            GameManager.Instance?.SetGameOver();
+        {
+            Invoke(nameof(EndGame), 0.1f);
         }
+    }
+
+    private void EndGame()
+    {
+        GameManager.Instance.SetGameOver();
     }
 }
