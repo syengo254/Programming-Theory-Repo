@@ -3,9 +3,12 @@ using UnityEngine;
 // INHERITANCE
 class GameoverState : GameState
 {
-    public GameoverState()
+    GameManager context;
+
+    public GameoverState(GameManager context)
     {
         Name = "GAMEOVER";
+        this.context = context;
     }
 
     public override void Enter()
@@ -21,5 +24,6 @@ class GameoverState : GameState
     public override void Exit()
     {
         GameManager.Instance.GameOver = false;
+        context.ResetPlayerInfo();
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -44,7 +45,7 @@ public class GameManager : MonoBehaviour
             Instance = this;
             menuState = new MenuState(this);
             playingState = new PlayingState();
-            gameoverState = new GameoverState();
+            gameoverState = new GameoverState(this);
 
             CurrentGameState = menuState;
             ShowMenu();
@@ -99,5 +100,22 @@ public class GameManager : MonoBehaviour
     public void AddPlayerScore(int points)
     {
         Score += points;
+    }
+
+    private string GetPlayerNameFromInput()
+    {
+        GameObject playerNameInput = GameObject.Find("PlayerNameInput");
+        if (playerNameInput == null)
+        {
+            return PlayerName == "" ? "Guest" : PlayerName;
+        }
+        return playerNameInput.GetComponent<TMP_InputField>().text.ToString();
+    }
+
+    public void ResetPlayerInfo()
+    {
+        string playerName = GetPlayerNameFromInput();
+        Score = 0;
+        PlayerName = playerName.Length > 0 ? playerName : "Guest";
     }
 }
