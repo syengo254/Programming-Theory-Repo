@@ -27,6 +27,7 @@ public class Obstacle : MonoBehaviour
             Destroy(gameObject);
 
             GameManager.Instance?.AddPlayerScore(obstacleType.Points);
+            MainManager.Current.EvadedCount ++;
         }
     }
 }

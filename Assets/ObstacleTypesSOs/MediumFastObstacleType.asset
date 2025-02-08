@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebb5a5608fa86441a24355cd226771f, type: 3}
   m_Name: MediumFastObstacleType
   m_EditorClassIdentifier: 
-  Speed: 8.5
+  Speed: 9.2
   Points: 100

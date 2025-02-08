@@ -9,8 +9,11 @@ public class MainManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI finalScoreText;
+    [SerializeField] TextMeshProUGUI difficultyScoreText;
 
     public static MainManager Current { get; private set; }
+    public int EvadedCount;
+    private int evadedThreshold = 5;
     private int difficulty = 1;
     public int Difficulty
     {
@@ -19,7 +22,7 @@ public class MainManager : MonoBehaviour
             return difficulty;
         }
     }
-    
+
     public GameObject gameOverCanvas;
     bool gameEnded = false;
     GameManager gameManager;
@@ -39,11 +42,23 @@ public class MainManager : MonoBehaviour
         {
             nameText.text = $"Name: {gameManager.GetPlayerName()}";
         }
+        difficultyScoreText.text = $"Difficulty: {Difficulty}";
     }
 
     void Update()
     {
+        if(EvadedCount >= evadedThreshold)
+        {
+            EvadedCount = 0;
+            IncrementDifficulty();
+            evadedThreshold += 5;
+        }
+    }
 
+    void IncrementDifficulty()
+    {
+        difficulty ++;
+        difficultyScoreText.text = $"Difficulty: {Difficulty}";
     }
 
 

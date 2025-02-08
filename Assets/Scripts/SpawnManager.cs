@@ -5,18 +5,40 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] List<GameObject> obstaclePrefabs = new List<GameObject>();
-    float spawnInterval = 4.0f;
-    float startZpos = 20.0f;
+
+    float spawnInterval = 5.0f;
+    float startZpos = 15.0f;
+    float nextSpawn = 0;
+    int oldDifficulty;
 
     void Start()
     {
-        InvokeRepeating("SpawnRandomObstacle", 0.5f, spawnInterval / MainManager.Current.Difficulty);
+        oldDifficulty = MainManager.Current.Difficulty;
+        Invoke("StartSpawning", 0.5f);
+    }
+
+    private void Update() {
+        if(MainManager.Current.Difficulty != oldDifficulty && !GameManager.Instance.GameOver)
+        {
+            // difficulty has just changed
+            oldDifficulty = MainManager.Current.Difficulty;
+            StopCoroutine(UpdateTickAndSpawn());
+            StartSpawning();
+        }
+        else
+        {
+            StopCoroutine(UpdateTickAndSpawn());
+            return;
+        }
+    }
+
+    void StartSpawning()
+    {
+        StartCoroutine(UpdateTickAndSpawn());
     }
 
     void SpawnRandomObstacle()
     {
-        if (GameManager.Instance != null && GameManager.Instance.GameOver) return;
-
         int randomIndex = Random.Range(0, obstaclePrefabs.Count);
         GameObject prefab = obstaclePrefabs[randomIndex];
 
@@ -24,17 +46,20 @@ public class SpawnManager : MonoBehaviour
         
         if(startZpos < 45)
         {
-            startZpos += 7.5f;
+            startZpos += 15f;
         }
     }
 
-    void Update()
+    IEnumerator UpdateTickAndSpawn()
     {
+        yield return new WaitForSeconds(nextSpawn);
 
+        SpawnRandomObstacle();
+        nextSpawn = spawnInterval / MainManager.Current.Difficulty;
+        StartCoroutine(UpdateTickAndSpawn());
     }
 
-    private void OnDestroy()
-    {
-        CancelInvoke();
+    private void OnDestroy() {
+        StopAllCoroutines();
     }
 }
