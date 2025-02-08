@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class MainManager : MonoBehaviour
 {
-
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI finalScoreText;
@@ -24,8 +23,8 @@ public class MainManager : MonoBehaviour
     }
 
     public GameObject gameOverCanvas;
-    bool gameEnded = false;
     GameManager gameManager;
+    bool gameEnded;
 
     private void Awake()
     {
@@ -38,7 +37,8 @@ public class MainManager : MonoBehaviour
     void Start()
     {
         gameManager = GameManager.Instance;
-        if (gameManager)
+
+        if (gameManager != null)
         {
             nameText.text = $"Name: {gameManager.GetPlayerName()}";
         }
@@ -47,7 +47,9 @@ public class MainManager : MonoBehaviour
 
     void Update()
     {
-        if(EvadedCount >= evadedThreshold)
+        if (gameEnded) return;
+
+        if (EvadedCount >= evadedThreshold)
         {
             EvadedCount = 0;
             IncrementDifficulty();
@@ -57,10 +59,9 @@ public class MainManager : MonoBehaviour
 
     void IncrementDifficulty()
     {
-        difficulty ++;
+        difficulty++;
         difficultyScoreText.text = $"Difficulty: {Difficulty}";
     }
-
 
     void FixedUpdate()
     {
@@ -68,7 +69,7 @@ public class MainManager : MonoBehaviour
 
         scoreText.text = $"Score: {gameManager.GetPlayerScore()}";
 
-        if (gameManager && gameManager.GameOver)
+        if (gameManager.GameOver)
         {
             gameOverCanvas.SetActive(true);
             finalScoreText.SetText($"Score: {gameManager.GetPlayerScore()}");

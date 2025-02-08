@@ -17,17 +17,20 @@ public class SpawnManager : MonoBehaviour
         Invoke("StartSpawning", 0.5f);
     }
 
-    private void Update() {
-        if(MainManager.Current.Difficulty != oldDifficulty && !GameManager.Instance.GameOver)
+    private void Update()
+    {
+        if (MainManager.Current.Difficulty != oldDifficulty && !GameManager.Instance.GameOver)
         {
             // difficulty has just changed
             oldDifficulty = MainManager.Current.Difficulty;
-            StopCoroutine(UpdateTickAndSpawn());
+            StopAllCoroutines();
             StartSpawning();
         }
-        else
+
+        if (GameManager.Instance.GameOver)
         {
-            StopCoroutine(UpdateTickAndSpawn());
+            StopAllCoroutines();
+            Destroy(gameObject);
             return;
         }
     }
@@ -43,8 +46,8 @@ public class SpawnManager : MonoBehaviour
         GameObject prefab = obstaclePrefabs[randomIndex];
 
         Instantiate(prefab, new Vector3(prefab.transform.position.x, prefab.transform.position.y, startZpos), prefab.transform.rotation);
-        
-        if(startZpos < 45)
+
+        if (startZpos < 45)
         {
             startZpos += 15f;
         }
@@ -59,7 +62,8 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine(UpdateTickAndSpawn());
     }
 
-    private void OnDestroy() {
+    private void OnDestroy()
+    {
         StopAllCoroutines();
     }
 }

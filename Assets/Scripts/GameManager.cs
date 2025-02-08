@@ -11,16 +11,17 @@ public class GameManager : MonoBehaviour
     // ENCAPSULATION
     public static GameManager Instance { get; private set; }
 
-    GameObject playerNameInput;
-    private GameState gameState;
-    GameState defaultGameState;
+    GameState currentState;
+    PlayingState playingState;
+    MenuState menuState;
+    GameoverState gameoverState;
 
     // ENCAPSULATION
     public GameState CurrentGameState
     {
         get
         {
-            return gameState;
+            return currentState;
         }
         set{
             if(value == null)
@@ -29,23 +30,29 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                gameState = value;
+                currentState = value;
             }
         }
     }
-    private PlayerInfo playerInfo;
 
-    public bool GameOver { get; private set; }
+    public string PlayerName;
+    public int Score;
+
+    public bool GameOver;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            menuState = new MenuState(this);
+            playingState = new PlayingState();
+            gameoverState = new GameoverState();
 
-            defaultGameState = new MenuGameState(); // default start state
+            CurrentGameState = menuState;
             ShowMenu();
+
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -56,133 +63,44 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        CurrentGameState.StateUpdate();
-    }
-
-    private string GetPlayerNameFromInput()
-    {
-        playerNameInput = GameObject.Find("PlayerNameInput");
-        if(playerNameInput == null)
-        {
-            return playerInfo == null ? "Guest" : playerInfo.Name;
-        }
-        return playerNameInput.GetComponent<TMP_InputField>().text.ToString();
+        CurrentGameState.Update();
     }
 
     public void StartGame()
     {
-        ResetPlayerInfo();
-        SwitchGameState(new PlayingGameState());
+        SwitchGameState(playingState);
     }
 
     //ABSTRACTION
     public void ShowMenu()
     {
-        SwitchGameState(defaultGameState);
+        SwitchGameState(menuState);
     }
 
     public void SetGameOver()
     {
-        GameOver = true;
-        SwitchGameState(new GameOverGameState());
+        SwitchGameState(gameoverState);
     }
 
     private void SwitchGameState(GameState newState)
     {
-        CurrentGameState?.Exit();
+        CurrentGameState.Exit();
         CurrentGameState = newState;
         CurrentGameState.Enter();
     }
 
     public int GetPlayerScore()
     {
-        return playerInfo.Score;
+        return Score;
     }
 
     public string GetPlayerName()
     {
-        return playerInfo.Name;
-    }
-
-    public void ResetPlayerInfo()
-    {
-        string playerName = GetPlayerNameFromInput();
-        playerInfo = new PlayerInfo
-        {
-            Score = 0,
-            Name = playerName.Length > 0 ? playerName : "Guest",
-        };
+        return PlayerName;
     }
 
     public void AddPlayerScore(int points)
     {
-        playerInfo.Score += points;
-    }
-
-    class PlayerInfo
-    {
-        public string Name;
-        public int Score;
-    }
-
-    // state classes
-    // INHERITANCE
-    class MenuGameState : GameState
-    {
-        public MenuGameState()
-        {
-            Name = "MENU";
-        }
-
-        // POLYMORPHISM
-        public override void Enter()
-        {
-            if (SceneManager.GetActiveScene().buildIndex != 0)
-            {
-                SceneManager.LoadScene(0);
-            }
-        }
-
-        public override void Exit()
-        {
-            print($"Exited {this.Name} STATE...");
-        }
-    }
-
-    class PlayingGameState : GameState
-    {
-        public PlayingGameState()
-        {
-            Name = "PLAYING";
-        }
-
-        public override void Enter()
-        {
-            SceneManager.LoadScene(1);
-        }
-
-        public override void Exit()
-        {
-            print($"Exited {this.Name} STATE...");
-        }
-    }
-
-    class GameOverGameState : GameState
-    {
-        public GameOverGameState()
-        {
-            Name = "GAMEOVER";
-        }
-
-        public override void Enter()
-        {
-            print("Game over!");
-        }
-
-        public override void Exit()
-        {
-            GameManager.Instance.GameOver = false;
-            print($"Exited {this.Name} STATE...");
-        }
+        Score += points;
     }
 }
